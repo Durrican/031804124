@@ -1,9 +1,11 @@
 import jieba.analyse
 import re
 import math
+import sys
 
 
 def clear(filepath):
+    # 文本中符号和空格的消除
     with open(filepath, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         lines1 = ''.join(lines)
@@ -19,6 +21,7 @@ def clear(filepath):
 
 
 def TF(txt):
+    # 把处理好的文本进行分词，分词个数按照字数决定
     len_in = len(txt)
     if len_in < 40:
         topk = round(len_in / 4) + 1
@@ -33,6 +36,7 @@ def TF(txt):
 
 
 def coscompare(res1_tf, res2_tf):
+    # 计算分好的词的余弦相似度
     s1_cut = res1_tf
     s2_cut = res2_tf
 
@@ -64,18 +68,17 @@ def coscompare(res1_tf, res2_tf):
     return res
 
 
-files = input()
-title = []
-title = files.split(' ')
-files1 = title[0]
-files2 = title[1]
-outfile = title[2]
-res1 = clear(files1)
-res2 = clear(files2)
+# 文件中的读入输出以及函数的调用
+
+oriPath = sys.argv[1]
+copyPath = sys.argv[2]
+ansPath = sys.argv[3]
+res1 = clear(oriPath)
+res2 = clear(copyPath)
 res1_TF = TF(res1)
 res2_TF = TF(res2)
 res_final = coscompare(res1_TF, res2_TF)
 res_final = str(res_final)
-file = open(outfile, 'w', encoding='utf-8')
+file = open(ansPath, 'w', encoding='utf-8')
 file.write(res_final)
 file.close()
